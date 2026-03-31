@@ -24,8 +24,8 @@ public class DishService {
         this.dishIngredientRepository = dishIngredientRepository;
         this.ingredientRepository = ingredientRepository;
     }
-    public List<Dish> getAllDishes(){
-        return dishRepository.findAll();
+    public List<Dish> getAllDishesFiltered(Double priceUnder, Double priceOver, String name) {
+        return dishRepository.findAllWithFilter(priceUnder, priceOver, name);
     }
     public Dish getDishById(int id){
         Dish dish = dishRepository.findOne(id);

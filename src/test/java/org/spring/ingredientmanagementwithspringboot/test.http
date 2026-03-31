@@ -44,3 +44,7 @@ PUT localhost:8080/dishes/1/ingredients
 Content-Type: application/json
 
 []
+
+
+### Get All Dishes with filter
+GET localhost:8080/dishes?priceUnder=9000&priceOver=4000&name=Gƒteau au chocolat

@@ -19,9 +19,16 @@ public class DishController {
     public DishController(DishService dishService) {
         this.dishService = dishService;
     }
+
     @GetMapping("")
-    public ResponseEntity<List<Dish>> getAllDishes() {
-        return ResponseEntity.ok(dishService.getAllDishes());
+    public ResponseEntity<List<Dish>> getAllDishes(
+            @RequestParam(required = false) Double priceUnder,
+            @RequestParam(required = false) Double priceOver,
+            @RequestParam(required = false) String name
+    ) {
+        return ResponseEntity.ok(
+                dishService.getAllDishesFiltered(priceUnder, priceOver, name)
+        );
     }
 
     @PutMapping("/{id}/ingredients")
