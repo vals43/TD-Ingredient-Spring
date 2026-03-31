@@ -26,9 +26,6 @@ public class IngredientRepositoryImpl implements IngredientRepository {
         String ingSql = """
                 select i.id, i.name, i.category,i.price from ingredient i
                 """;
-       // String stockMovementSql = """
-         //       select id, id_ingredient, quantity, type, unit, creation_datetime from stockmovement where id_ingredient = ?
-           //     """;
         List<Ingredient> ingredients = new ArrayList<>();
         try(Connection connection = datasource.getConnection();
             PreparedStatement ingPs = connection.prepareStatement(ingSql);
