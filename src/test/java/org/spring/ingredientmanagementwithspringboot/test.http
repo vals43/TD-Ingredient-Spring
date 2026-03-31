@@ -48,3 +48,15 @@ Content-Type: application/json
 
 ### Get All Dishes with filter
 GET localhost:8080/dishes?priceUnder=9000&priceOver=4000&name=Gƒteau au chocolat
+
+### Create Dishes
+POST localhost:8080/dishes
+Content-Type: application/json
+
+[
+  {
+    "name": "Riz",
+    "dishType": "MAIN",
+    "price": 15000.0
+  }
+]

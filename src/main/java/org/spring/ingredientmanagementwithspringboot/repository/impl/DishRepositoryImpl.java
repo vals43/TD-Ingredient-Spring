@@ -189,5 +189,46 @@ public class DishRepositoryImpl implements DishRepository {
         }
     }
 
+    @Override
+    public boolean existsByName(String name) {
+        String sql = "SELECT 1 FROM dish WHERE LOWER(name) = LOWER(?)";
+
+        try (Connection conn = datasource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, name);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Dish saveDish(Dish dish) {
+        String sql = """
+                        INSERT INTO dish(name, dish_type, price) 
+                        VALUES (?, ?::dish_type, ?) RETURNING id
+                      """;
+
+        try (Connection conn = datasource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, dish.getName());
+            ps.setString(2, dish.getDishType().name());
+            ps.setDouble(3, dish.getPrice());
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                dish.setId(rs.getInt("id"));
+            }
+
+            return dish;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

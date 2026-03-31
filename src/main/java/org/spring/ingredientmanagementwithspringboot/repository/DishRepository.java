@@ -10,4 +10,6 @@ public interface DishRepository {
     List<DishIngredient> findIngredientsByDishId(int id);
     boolean checkIfExist(int id);
     List<Dish> findAllWithFilter(Double priceUnder, Double priceOver, String name);
+    Dish saveDish(Dish dish);
+    boolean existsByName(String name);
 }

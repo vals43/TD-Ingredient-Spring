@@ -1,5 +1,7 @@
 package org.spring.ingredientmanagementwithspringboot.service;
 
+import org.spring.ingredientmanagementwithspringboot.DTO.DishCreateRequest;
+import org.spring.ingredientmanagementwithspringboot.DTO.DishResponse;
 import org.spring.ingredientmanagementwithspringboot.entity.Dish;
 import org.spring.ingredientmanagementwithspringboot.entity.DishIngredient;
 import org.spring.ingredientmanagementwithspringboot.entity.Enum.UnitType;
@@ -24,6 +26,7 @@ public class DishService {
         this.dishIngredientRepository = dishIngredientRepository;
         this.ingredientRepository = ingredientRepository;
     }
+
     public List<Dish> getAllDishesFiltered(Double priceUnder, Double priceOver, String name) {
         return dishRepository.findAllWithFilter(priceUnder, priceOver, name);
     }
@@ -53,5 +56,33 @@ public class DishService {
             dishIngredientRepository.attachIngredient(id,dishIngredientList);
         }
         return this.getDishById(id);
+    }
+
+    public List<DishResponse> createDishes(List<DishCreateRequest> requests) {
+
+        List<DishResponse> result = new ArrayList<>();
+
+        for (DishCreateRequest req : requests) {
+
+            if (dishRepository.existsByName(req.getName())) {
+                throw new RuntimeException("Dish.name=" + req.getName() + " already exists");
+            }
+
+            Dish dish = new Dish();
+            dish.setName(req.getName());
+            dish.setDishType(req.getDishType());
+            dish.setPrice(req.getPrice());
+
+            Dish saved = dishRepository.saveDish(dish);
+
+            result.add(new DishResponse(
+                    saved.getId(),
+                    saved.getName(),
+                    saved.getDishType().name(),
+                    saved.getPrice()
+            ));
+        }
+
+        return result;
     }
 }

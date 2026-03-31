@@ -1,6 +1,8 @@
 package org.spring.ingredientmanagementwithspringboot.controller;
 
 
+import org.spring.ingredientmanagementwithspringboot.DTO.DishCreateRequest;
+import org.spring.ingredientmanagementwithspringboot.DTO.DishResponse;
 import org.spring.ingredientmanagementwithspringboot.entity.Dish;
 import org.spring.ingredientmanagementwithspringboot.entity.DishIngredient;
 import org.spring.ingredientmanagementwithspringboot.entity.Ingredient;
@@ -20,7 +22,7 @@ public class DishController {
         this.dishService = dishService;
     }
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<List<Dish>> getAllDishes(
             @RequestParam(required = false) Double priceUnder,
             @RequestParam(required = false) Double priceOver,
@@ -40,6 +42,30 @@ public class DishController {
             return ResponseEntity.status(HttpStatus.OK).body(dishService.updateDishIngredient(id, dishIngredientList));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createDishes(@RequestBody List<DishCreateRequest> dishes) {
+
+        try {
+            if (dishes == null || dishes.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Request body is required");
+            }
+
+            List<DishResponse> created = dishService.createDishes(dishes);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(created);
+
+        } catch (RuntimeException e) {
+
+            if (e.getMessage().contains("already exists")) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            }
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(e.getMessage());
         }
     }
 }
