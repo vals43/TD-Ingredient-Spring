@@ -47,7 +47,7 @@ Content-Type: application/json
 
 
 ### Get All Dishes with filter
-GET localhost:8080/dishes?priceUnder=9000&priceOver=1000&name=Salaide fraŒche
+GET localhost:8080/dishes?priceOver=1000
 
 ### Create Dishes
 POST localhost:8080/dishes

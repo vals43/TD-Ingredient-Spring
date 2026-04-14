@@ -34,7 +34,7 @@ public class IngredientService {
         Ingredient ingredient = getIngredientById(id);
         List<StockMovement> stockMovementList = stockMovementRepository.findOneByIngredientId(id);
         ingredient.setStockMovementList(stockMovementList);
-        return ingredient.getStockValueAt(at, unit);
+        return ingredient.wgetStockValueAt(at, unit);
     }
 
 }

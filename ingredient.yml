@@ -1,0 +1,123 @@
+openapi: 3.0.3
+
+info:
+  title: Ingredient API
+  description: API de gestion des ingrédients et du stock
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Local server
+
+paths:
+  /ingredients/{id}:
+    get:
+      summary: Récupérer un ingrédient par son ID
+      operationId: getIngredientById
+      tags:
+        - Ingredients
+      parameters:
+        - name: id
+          in: path
+          description: ID de l'ingrédient
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: Ingrédient trouvé
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ingredient"
+        "404":
+          description: Ingrédient non trouvé
+
+  /ingredients/{id}/stock:
+    get:
+      summary: Récupérer le stock d’un ingrédient à une date donnée
+      operationId: getStockValueAt
+      tags:
+        - Stock
+      parameters:
+        - name: id
+          in: path
+          description: ID de l'ingrédient
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: at
+          in: query
+          description: Date/heure du stock (optionnel)
+          required: false
+          schema:
+            $ref: "#/components/schemas/Instant"
+        - name: unit
+          in: query
+          description: Unité du stock
+          required: false
+          schema:
+            type: string
+            enum:
+              - KG
+              - L
+              - PCS
+      responses:
+        "200":
+          description: Valeur du stock
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StockResponse"
+        "404":
+          description: Ingrédient non trouvé
+
+components:
+  schemas:
+    Ingredient:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        unit:
+          type: string
+          enum:
+            - KG
+            - L
+            - PCS
+      required:
+        - id
+        - name
+        - unit
+
+    Instant:
+      type: string
+      format: date-time
+      example: "2026-04-14T10:15:30Z"
+
+    StockResponse:
+      type: object
+      properties:
+        ingredientId:
+          type: integer
+          format: int32
+        quantity:
+          type: number
+          format: double
+        unit:
+          type: string
+          enum:
+            - KG
+            - L
+            - PCS
+        at:
+          $ref: "#/components/schemas/Instant"
+      required:
+        - ingredientId
+        - quantity
+        - unit
